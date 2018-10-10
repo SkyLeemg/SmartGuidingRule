@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15dp"
+    >
+    <TextView
+        android:id="@+id/tv_beacon_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="名称：Vitecbeacon"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:id="@+id/tv_beacon_uuid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:text="UUID：FDA50693-A4E2-4FB1-AFCF-C6EB07647825"
+        />
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <TextView
+        android:id="@+id/tv_beacon_major"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:text="MAJOR：10001"
+        />
+    <TextView
+        android:id="@+id/tv_beacon_minor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:layout_marginLeft="25dp"
+        android:text="MINOR:：10101"
+        />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tv_beacon_rssi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text="RSSI：-31"
+            />
+        <TextView
+            android:id="@+id/tv_beacon_pw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:layout_marginLeft="30dp"
+            android:text="MPower:：-65"
+            />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_beacon_mac"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:text="MAC:AKSDKKKFJDJJJ"
+        />
+
+
+
+
+</LinearLayout>
