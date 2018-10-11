@@ -83,7 +83,6 @@ public class BleScanService extends Service implements BeaconConsumer {
             @Override
             public void didRangeBeaconsInRegion(Collection<Beacon> collection, Region region) {
                 Log.i(TAG, "didRangeBeaconsInRegion: 查看搜索到的beacon总数:"+collection.size());
-//                updateTextViewMsg("进入didRangeBeaconsInRegion方法");
                 beacons.clear();
                 if (collection.size() > 0) {
                     //符合要求的beacon集合
@@ -104,37 +103,9 @@ public class BleScanService extends Service implements BeaconConsumer {
                         }
                     });
 
-//                    if (lastBeacon == null) {
-//                        Log.e(TAG, "ceshi,didRangeBeaconsInRegion: last newBeacon is null" );
-//                        lastBeacon = beacons.get(0);
-//                    } else {
-//                        /**
-//                         * 由于搜索不稳定，并不是每一次搜素都能搜到最近的那一个标签，所以需要进行合并和过滤的处理
-//                         * 1.判断这次搜素的集合中是否包含上一次最近的beacon,
-//                         * 2.如果有包含，说明这次的搜索时比较全面且正确的，给lastBeacon重新赋值
-//                         * 3.如果不包含，则让集合中最近一个beacon的rssi与上一个最近beacon的rssi对比
-//                         * 3.1 如果集合最近beacon的rssi比上一个最近的大，则给lastbeacon重新赋值
-//                         * 3.2 否则 不替换
-//                         *
-//                         */
-//                        if (beacons.contains(lastBeacon)) {
-//                            lastBeacon = beacons.get(0);
-//                        } else{
-//                            if (beacons.get(0).getRssi() > lastBeacon.getRssi()) {
-//                                lastBeacon = beacons.get(0);
-//                            }
-//                        }
-//                    }
+
                     Log.e(TAG, "didRangeBeaconsInRegion: 发送数据到主界面" );
                     EventBus.getDefault().post(beacons);
-                } else {
-//                    goneCount++;
-////                    当连续8次都搜不到beacon设备，且刚才有在beacon区域内，则说明时离开了beacon区域
-//                    if (goneCount >= 8 && inBeaconRange) {
-////                        NotificationHelper.sendNotification(getApplicationContext(),"离开beacon区域");
-//                        inBeaconRange = false;
-//                        Log.i(TAG, "didRangeBeaconsInRegion: 离开了beacon区域");
-//                    }
                 }
             }
 

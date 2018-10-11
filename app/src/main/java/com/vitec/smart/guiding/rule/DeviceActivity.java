@@ -27,9 +27,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MainActivityGettable {
+public class DeviceActivity extends AppCompatActivity implements MainActivityGettable {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "DeviceActivity";
     private ListView lvBleDevice;
     private BleDeviceAdapter mBleDeviceAdapter;
     private List<Beacon> devices;
@@ -38,9 +38,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityGetta
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_device);
         initView();
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
         checkBleEnable();
         requestLocationPermissions();
         initData();
@@ -140,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityGetta
     protected void onResume() {
         super.onResume();
         Toast.makeText(this,"正在搜索设备",Toast.LENGTH_SHORT).show();
+        EventBus.getDefault().register(this);
         initService();
     }
 
@@ -152,12 +153,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityGetta
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
+        BleScanService.stopScanService(this);
+        Log.e(TAG, "onDestroy: " );
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        EventBus.getDefault().unregister(this);
         BleScanService.stopScanService(this);
     }
 
@@ -185,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityGetta
         Log.e(TAG, "beaconBussCallBack: 查看回调的beacon:"+beacons.get(0).toString() );
         displayBleDevice(beacons);
     }
+
 
     /**
      * 显示搜索到的设备信息
