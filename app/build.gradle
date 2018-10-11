@@ -24,6 +24,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'org.altbeacon:android-beacon-library:2.13+'
-    compile 'org.greenrobot:eventbus:3.0.0'
-    compile 'com.tuyenmonkey:mkloader:1.0.0'
+    compile 'org.greenrobot:eventbus:3.0.0' //eventbus
+    compile 'com.tuyenmonkey:mkloader:1.0.0' // 加载框库
+
+    compile 'com.github.huangyanbin:SmartTable:2.2.0' //表格库
+    compile('com.aliyun.alink.linksdk:iot-linkkit:1.4.0')
 }

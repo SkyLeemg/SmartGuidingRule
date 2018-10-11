@@ -13,21 +13,32 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bin.david.form.core.SmartTable;
+import com.bin.david.form.core.TableConfig;
+import com.bin.david.form.data.column.Column;
+import com.bin.david.form.data.table.TableData;
+import com.vitec.smart.guiding.rule.bean.TestInfo;
 import com.vitec.smart.guiding.rule.service.ConnectDeviceService;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by skyel on 2018/10/11.
  */
+//@SmartTable(name = "devicedata" )
 public class DealDeviceDataActivity extends Activity {
 
     private static final String TAG = "DealDeviceDataActivity";
     private TextView tvMsg;
+    private SmartTable table;
 
     private static final int REQUEST_SELECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
@@ -44,6 +55,8 @@ public class DealDeviceDataActivity extends Activity {
     private BluetoothAdapter mBtAdapter = null;
     private int mState = UART_PROFILE_DISCONNECTED;
     private StringBuffer stringBuffer=new StringBuffer();
+    private int positon = 0;
+    private List<TestInfo> lists;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +64,54 @@ public class DealDeviceDataActivity extends Activity {
         setContentView(R.layout.activity_deal_device_data);
         initView();
         service_init();
+        initData();
     }
+
+    private void initData() {
+//        Column<String> column1 = new Column<String>("垂直度");
+//        Column<String> column2 = new Column<String>("水平度");
+//        Column<String> column3 = new Column<String>("误差");
+//        List<String> datas = new ArrayList<>();
+//        datas.add("11.1");
+//        datas.add("121.1");
+//        datas.add("992");
+//        TableData<String> tableData = new TableData<String>("data", datas, column1);
+        lists = new ArrayList<>();
+        lists.add(new TestInfo("", "", ""));
+        lists.add(new TestInfo("", "", ""));
+        lists.add(new TestInfo("", "", ""));
+        lists.add(new TestInfo("", "", ""));
+        lists.add(new TestInfo("", "", ""));
+        lists.add(new TestInfo("", "", ""));
+        lists.add(new TestInfo("", "", ""));
+        lists.add(new TestInfo("", "", ""));
+        lists.add(new TestInfo("", "", ""));
+        lists.add(new TestInfo("", "", ""));
+        lists.add(new TestInfo("", "", ""));
+        lists.add(new TestInfo("", "", ""));
+        lists.add(new TestInfo("", "", ""));
+        lists.add(new TestInfo("", "", ""));
+        lists.add(new TestInfo("", "", ""));
+        lists.add(new TestInfo("", "", ""));
+        lists.add(new TestInfo("", "", ""));
+        table.setData(lists);
+
+        table.getConfig().setMinTableWidth(getScreenWidth());
+
+    }
+
+
 
     private void initView() {
         tvMsg = (TextView) findViewById(R.id.tv_msg);
+        table = (SmartTable) findViewById(R.id.table);
     }
 
+    public int getScreenWidth() {
+        WindowManager manager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+
+        return manager.getDefaultDisplay().getWidth();
+    }
 
     private void service_init() {
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -158,8 +213,12 @@ public class DealDeviceDataActivity extends Activity {
                             String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
                             stringBuffer.append("[" + currentDateTimeString + "]收到的数据长度：" + text.length() + "，数据内容：" + text);
                             stringBuffer.append("\n");
-                            tvMsg.setText(stringBuffer.toString());
-
+//                            tvMsg.setText(stringBuffer.toString());
+                            if (positon < lists.size()) {
+                                lists.get(positon).setColumn(text);
+                                positon++;
+                                table.setData(lists);
+                            }
                         } catch (Exception e) {
                             Log.e(TAG, e.toString());
                         }
@@ -174,4 +233,6 @@ public class DealDeviceDataActivity extends Activity {
             }
         }
     };
+
+
 }
