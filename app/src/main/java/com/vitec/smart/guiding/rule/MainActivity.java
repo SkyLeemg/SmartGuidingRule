@@ -3,15 +3,19 @@ package com.vitec.smart.guiding.rule;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.vitec.smart.guiding.rule.adapter.BleDeviceAdapter;
+import com.vitec.smart.guiding.rule.interfaces.MainActivityGettable;
 import com.vitec.smart.guiding.rule.listener.DeviceItemClickListener;
 import com.vitec.smart.guiding.rule.service.BleScanService;
 
@@ -23,7 +27,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainActivityGettable {
 
     private static final String TAG = "MainActivity";
     private ListView lvBleDevice;
@@ -37,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initView();
         EventBus.getDefault().register(this);
+        checkBleEnable();
         requestLocationPermissions();
         initData();
         initService();
@@ -105,15 +110,54 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 用于检查手机蓝牙设备是否可以，以及蓝牙设备是否有打开
+     */
+    private void checkBleEnable() {
+        final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        if(adapter == null) {
+            AlertDialog dialog = new AlertDialog.Builder(this).setTitle("错误").setMessage("你的设备不具备蓝牙功能!").create();
+            dialog.show();
+            return;
+        }
+
+        if(!adapter.isEnabled()) {
+            AlertDialog dialog = new AlertDialog.Builder(this).setTitle("提示")
+                    .setMessage("蓝牙设备未打开,请开启此功能后重试!")
+                    .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            Intent mIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                            startActivityForResult(mIntent, 1);
+                        }
+                    })
+                    .create();
+            dialog.show();
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+        Toast.makeText(this,"正在搜索设备",Toast.LENGTH_SHORT).show();
         initService();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
         BleScanService.stopScanService(this);
     }
 
@@ -125,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         devices = new ArrayList<>();
         mBleDeviceAdapter = new BleDeviceAdapter(devices, this);
         lvBleDevice.setAdapter(mBleDeviceAdapter);
-        lvBleDevice.setOnItemClickListener(new DeviceItemClickListener(this));
+        lvBleDevice.setOnItemClickListener(new DeviceItemClickListener(this,this));
     }
 
     private void initView() {
@@ -158,4 +202,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public  List<Beacon> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(List<Beacon> devices) {
+        this.devices = devices;
+    }
 }
